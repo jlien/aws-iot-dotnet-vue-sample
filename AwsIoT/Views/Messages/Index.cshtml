@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h2>Messages</h2>
+
+<div id="iotApp">
+    <div id="nameForm">
+        <h3>Enter Your Name</h3>
+        <form v-on:submit="submitName" action="WebsocketProviderInfo" method="post">
+            <input autofocus v-model="userGuid" placeholder="enter your first name" />
+            <button id="nameSubmitButton" type="submit">Submit</button>
+        </form>
+    </div>
+
+
+    <div id="messagesList">
+        <ul>
+            <li v-for="message in messages">{{message.userGuid}}: {{message.content}}</li>
+        </ul>
+    </div>
+    
+    <div id="messageForm" style="display: none;">
+        <form v-on:submit="sub" action="" method="post">
+            <label>{{ userGuid }}: </label>
+
+            <input v-model="content" placeholder="type a message..." />
+
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+</div>
+
