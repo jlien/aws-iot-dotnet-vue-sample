@@ -1,0 +1,25 @@
+﻿# This file represents all of the web socket topics a user client will have access to and the actions they can take 
+# on these topics. These actions are as follows:
+#   SUBSCRIBE - the ability to subscribe to a given topic
+#   RECEIVE - the ability to receive any messages that are sent on a topic (must be subscribed to the topic)
+#   PUBLISH - the ability to send messages on a topic
+#
+# Policies are generated for each user. This means that the topics and actions allowed can be user specific. An example
+# of this would be a user should only be able to get websocket messages about their messages but another topic might
+# be shared by multiple users. For a user specific topic, a user_guid will be appended to the topic name.
+#
+# To add information to a users policy for a new channel, add a new item to the policies list in the following format:
+#
+#     - name: "ChatTopic" <- Identifier for the client. The front end establishing the connection will need this.
+#       topic: "chat" <- The topic that the policy is for.
+#       subscribe: true <- Boolean indicating that the SUBSCRIBE action is allowed on the given topic
+#       receive: true <- Boolean indicating that the RECEIVE action is allowed on the given topic
+#       publish: false <- Boolean indicating that the PUBLISH action is allowed on the given topic
+#       user_specific: true <- Boolean indicating that the topic is user specific.
+
+- name: "ChatTopic"
+  topic: "chat"
+  subscribe: true
+  receive: true
+  publish: false
+  user_specific: true
