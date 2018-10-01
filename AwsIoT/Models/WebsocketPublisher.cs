@@ -12,6 +12,10 @@ namespace AwsIoT.Models
 {
     public class WebsocketPublisher
     {
+        string PublisherAccessKey => AwsIotSettings.AccessKey;
+        string PublisherSecretKey => AwsIotSettings.SecretKey;
+        string AwsIotHostName => AwsIotSettings.HostName;
+
         public async void Publish(PublishMessageDTO publishMessageDTO)
         {
 
@@ -50,7 +54,6 @@ namespace AwsIoT.Models
             }
         }
 
-
         private List<string> TopicsForUser(string userGuid)
         {
             // If Jane publish to public and John
@@ -66,15 +69,11 @@ namespace AwsIoT.Models
             return new List<string> { ChatTopic.PublicTopic };
         }
 
-        private AmazonIotDataClient IotDataClient =>
-            new AmazonIotDataClient(AwsIotHostName, AWSCredentials);
+        AmazonIotDataClient IotDataClient =>
+            new AmazonIotDataClient(AwsIotHostName, AwsCredentials);
 
-        private BasicAWSCredentials AWSCredentials =>
+        BasicAWSCredentials AwsCredentials =>
             new BasicAWSCredentials(PublisherAccessKey, PublisherSecretKey);
-
-        private string PublisherAccessKey => "accessKey";
-        private string PublisherSecretKey => "secretKey";
-        private string AwsIotHostName => "hello";
 
     }
 }

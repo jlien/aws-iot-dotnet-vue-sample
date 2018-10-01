@@ -1,10 +1,16 @@
-﻿using System;
+﻿using static System.Environment;
+
 namespace AwsIoT.Models
 {
-    public class AwsIotSettings
+    public static class AwsIotSettings
     {
-        public AwsIotSettings()
-        {
-        }
+        public static string AccessKey =>
+            GetEnvironmentVariable("AwsIotAccessKey");
+
+        public static string SecretKey =>
+            GetEnvironmentVariable("AwsIotSecretKey");
+
+        public static string HostName =>
+            GetEnvironmentVariable("AwsIotHostName");
     }
 }

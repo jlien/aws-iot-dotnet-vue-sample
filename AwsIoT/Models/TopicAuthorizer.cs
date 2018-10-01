@@ -7,6 +7,7 @@ using Amazon.CognitoIdentity.Model;
 using Amazon.IoT;
 using Amazon.IoT.Model;
 using Amazon.Runtime;
+using AwsIot.Models;
 
 namespace AwsIoT.Models
 {
@@ -18,9 +19,18 @@ namespace AwsIoT.Models
 
     public class TopicAuthorizer
     {
-        private string UserGuid;
-        private string AwsIotEndpoint;
-        private WebsocketUserDTO WebsocketUserDTO;
+
+        string UserGuid;
+        string AwsIotEndpoint;
+        WebsocketUserDTO WebsocketUserDTO;
+
+        // Configs
+        string IdentityProviderName => AwsCognitoSettings.IdentityProviderName;
+        string CognitoIdentityPoolId => AwsCognitoSettings.AccessKey;
+        long TokenDuration => AwsCognitoSettings.TokenDuration;
+        string IoTAWSAccessKey => AwsIotSettings.AccessKey;
+        string IoTAWSSecretKey => AwsIotSettings.SecretKey;
+        string IoTAWSRegion => AwsIotSettings.HostName;
 
         public TopicAuthorizer(string userGuid)
         {
@@ -170,13 +180,6 @@ namespace AwsIoT.Models
 
             return credentials;
         }
-
-        private string IdentityProviderName => "IdentityProviderName";
-        private string CognitoIdentityPoolId => "CognitoIdentityPoolId";
-        private long TokenDuration => 3600;
-        private string IoTAWSAccessKey => "IoTAWSAccessKey";
-        private string IoTAWSSecretKey => "IoTAWSSecretKey";
-        private string IoTAWSRegion => "IoTAWSRegion";
 
 
         private AmazonCognitoIdentityClient CognitoIdentityClient
