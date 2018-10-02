@@ -12,8 +12,8 @@ namespace AwsIoT.Models
 {
     public class WebsocketPublisher
     {
-        string PublisherAccessKey => AwsIotSettings.AccessKey;
-        string PublisherSecretKey => AwsIotSettings.SecretKey;
+        string PublisherAccessKey => AwsIotSettings.PublisherAccessKey;
+        string PublisherSecretKey => AwsIotSettings.PublisherSecretKey;
         string AwsIotHostName => AwsIotSettings.HostName;
 
         public async void Publish(PublishMessageDTO publishMessageDTO)

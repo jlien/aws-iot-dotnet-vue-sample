@@ -7,7 +7,6 @@ using Amazon.CognitoIdentity.Model;
 using Amazon.IoT;
 using Amazon.IoT.Model;
 using Amazon.Runtime;
-using AwsIot.Models;
 
 namespace AwsIoT.Models
 {
@@ -25,11 +24,13 @@ namespace AwsIoT.Models
         WebsocketUserDTO WebsocketUserDTO;
 
         // Configs
-        string IdentityProviderName => AwsCognitoSettings.IdentityProviderName;
-        string CognitoIdentityPoolId => AwsCognitoSettings.AccessKey;
-        long TokenDuration => AwsCognitoSettings.TokenDuration;
-        string IoTAWSAccessKey => AwsIotSettings.AccessKey;
-        string IoTAWSSecretKey => AwsIotSettings.SecretKey;
+        string IdentityProviderName => AwsIotSettings.IdentityProviderName;
+        string CognitoIdentityPoolId => AwsIotSettings.IdentityPoolId;
+        long TokenDuration => AwsIotSettings.TokenDuration;
+
+        // Subscriber
+        string IoTAWSAccessKey => AwsIotSettings.SubscriberAccessKey;
+        string IoTAWSSecretKey => AwsIotSettings.SubscriberSecretKey;
         string IoTAWSRegion => AwsIotSettings.HostName;
 
         public TopicAuthorizer(string userGuid)
@@ -186,8 +187,8 @@ namespace AwsIoT.Models
         {
             get
             {
-                var region = RegionEndpoint.GetBySystemName(IoTAWSRegion);
-                return new AmazonCognitoIdentityClient(AWSCredentials, region);
+                //var region = RegionEndpoint.GetBySystemName(IoTAWSRegion);
+                return new AmazonCognitoIdentityClient(AWSCredentials, Amazon.RegionEndpoint.USEast1);
             }
         }
 

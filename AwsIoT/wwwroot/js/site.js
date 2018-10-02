@@ -17,8 +17,7 @@ var app = new Vue({
     methods: {
         sub: function(event) {
             event.preventDefault();
-            ajaxRequest = true;
-            
+
             var messageData = JSON.stringify({
                 userGuid: this.userGuid,
                 content: this.content
@@ -33,11 +32,7 @@ var app = new Vue({
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function(data, other){
-                     that.postResults = data;
-                     that.ajaxRequest = false;
                     that.messages.push(data);
-                    // $("#messagesList").append("<p>" + data.userGuid + ": " +
-                       // data.content + "</p>");
                     that.content = "";
                 },
                 error: function(data){
@@ -69,6 +64,46 @@ var app = new Vue({
                     alert("Error fetching websocket connection info");
                 }
             });
+        },
+        configSocket: function() {
+            var that = this;
+
+            // Create a client instance
+            var client = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId");
+
+            // set callback handlers
+            client.onConnectionLost = onConnectionLost;
+            client.onMessageArrived = onMessageArrived;
+
+            // connect the client
+            client.connect({onSuccess:onConnect});
+
+            // called when the client connects
+            function onConnect() {
+              // Once a connection has been made, make a subscription and send a message.
+              console.log("onConnect");
+
+                // TODO: Connect to each topic
+              client.subscribe("World");
+              message = new Paho.MQTT.Message("Hello");
+              message.destinationName = "World";
+              client.send(message);
+            }
+
+            // called when the client loses its connection
+            function onConnectionLost(responseObject) {
+                // retry
+              if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost:"+responseObject.errorMessage);
+              }
+            }
+
+            // called when a message arrives
+            function onMessageArrived(message) {
+                console.log("onMessageArrived:"+message.payloadString);
+                // handle messages
+                that.messages.push(message);
+            }    
         }
     }
 });

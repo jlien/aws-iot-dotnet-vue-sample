@@ -14,10 +14,8 @@ namespace AwsIoT.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-
             return View();
         }
-
 
         [HttpPost]
         [Route("Messages")]

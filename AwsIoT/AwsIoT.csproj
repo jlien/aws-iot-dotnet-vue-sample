@@ -24,5 +24,6 @@
   <ItemGroup>
     <Compile Remove="Views\Messages\Index.cs" />
     <Compile Remove="Models\EmptyClass.cs" />
+    <Compile Remove="Models\AwsCognitoSettings.cs" />
   </ItemGroup>
 </Project>
