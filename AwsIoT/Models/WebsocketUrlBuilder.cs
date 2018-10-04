@@ -33,7 +33,7 @@ namespace AwsIoT.Models
 
             var date = datetime.Substring(0, 8);
 
-            var credentialScope = $"{date}/{AwsIotSettings.Region}/{Service}/aws4_request";
+            var credentialScope = $"{date}/{"us-east-1"}/{Service}/aws4_request";
             var canonicalQuerystring = $"X-Amz-Algorithm={Algorithm}";
             canonicalQuerystring +=
                 $"&X-Amz-Credential={System.Uri.EscapeDataString($"{credentials.AccessKeyId}/{credentialScope}")}";
@@ -44,7 +44,7 @@ namespace AwsIoT.Models
             var canonicalRequest = $"{Method}\n{Uri}\n{canonicalQuerystring}\n{canonicalHeaders}\nhost\n{payloadHash}";
 
             var stringToSign = $"{Algorithm}\n{datetime}\n{credentialScope}\n{Sha256(canonicalRequest)}";
-            var signingKey = GetSignatureKey(credentials.SecretKey, date, AwsIotSettings.Region, Service);
+            var signingKey = GetSignatureKey(credentials.SecretKey, date, "us-east-1", Service);
             var signature = ConvertByteArrayToString(HmacSha256(stringToSign, signingKey));
             canonicalQuerystring += $"&X-Amz-Signature={signature}";
             if (!string.IsNullOrEmpty(credentials.SessionToken))

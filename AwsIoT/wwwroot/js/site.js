@@ -7,11 +7,12 @@ var app = new Vue({
         userGuid: "",
         content: "",
         messages: [
-            { "userGuid": "Bot", "content": "Enter Messages Here" }
+            { "UserGuid": "Bot", "Content": "Enter Messages Here" }
         ],
         postResults: [],
         ajaxRequest: false,
-        websocketConnectionUrl: ""
+        websocketConnectionUrl: "",
+        connectionRetryCount: 0
     },
     methods: {
         sub: function(event) {
@@ -31,7 +32,6 @@ var app = new Vue({
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function(data, other){
-                    that.messages.push(data);
                     that.content = "";
                 },
                 error: function(data){
@@ -68,8 +68,6 @@ var app = new Vue({
             var that = this;
 
             // Create a client instance
-            // Hack the string
-            //var host = websocketInfo.url.replace("wss://", "");
             var client = new Paho.MQTT.Client(websocketInfo.url, "clientId");
 
             // set callback handlers
@@ -77,33 +75,44 @@ var app = new Vue({
             client.onMessageArrived = onMessageArrived;
 
             // connect the client
-            client.connect({onSuccess:onConnect});
+            client.connect({onSuccess:onConnect, keepAliveInterval: 15});
 
             // called when the client connects
             function onConnect() {
               // Once a connection has been made, make a subscription and send a message.
               console.log("onConnect");
 
-                // TODO: Connect to each topic
-              client.subscribe("World");
-              message = new Paho.MQTT.Message("Hello");
-              message.destinationName = "World";
-              client.send(message);
+              websocketInfo.topics.forEach(function(topic){
+                  client.subscribe(topic);
+              });
             }
 
             // called when the client loses its connection
             function onConnectionLost(responseObject) {
                 // retry
+                that.connectionRetryCount += 1;
+
               if (responseObject.errorCode !== 0) {
                 console.log("onConnectionLost:"+responseObject.errorMessage);
               }
+
+                console.log("retry counts: " + that.connectionRetryCount);
+
+                if (that.connectionRetryCount < 5) {
+                    console.log("trying to reconnect");
+                    client.connect({onSuccess: onConnect});
+                } else {
+                    console.log("too many reconnect attempts");
+                }
             }
 
             // called when a message arrives
             function onMessageArrived(message) {
                 console.log("onMessageArrived:"+message.payloadString);
+
                 // handle messages
-                that.messages.push(message);
+                var messageObject = JSON.parse(message.payloadString);
+                that.messages.push(messageObject);
             }    
         }
     }
