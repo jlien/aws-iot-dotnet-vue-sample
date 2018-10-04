@@ -68,7 +68,7 @@ var app = new Vue({
             var that = this;
 
             // Create a client instance
-            var client = new Paho.MQTT.Client(websocketInfo.url, "clientId");
+            var client = new Paho.MQTT.Client(websocketInfo.url, "clientId" + that.userGuid);
 
             // set callback handlers
             client.onConnectionLost = onConnectionLost;
