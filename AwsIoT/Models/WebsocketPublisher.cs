@@ -14,7 +14,7 @@ namespace AwsIoT.Models
     {
         string PublisherAccessKey => AwsIotSettings.PublisherAccessKey;
         string PublisherSecretKey => AwsIotSettings.PublisherSecretKey;
-        string AwsIotHostName => AwsIotSettings.HostName;
+        string AwsIotHostName => AwsIotSettings.Endpoint;
 
         public async void Publish(PublishMessageDTO publishMessageDTO)
         {
@@ -70,7 +70,7 @@ namespace AwsIoT.Models
         }
 
         AmazonIotDataClient IotDataClient =>
-            new AmazonIotDataClient(AwsIotHostName, AwsCredentials);
+        new AmazonIotDataClient($"https://{AwsIotHostName}", AwsCredentials);
 
         BasicAWSCredentials AwsCredentials =>
             new BasicAWSCredentials(PublisherAccessKey, PublisherSecretKey);

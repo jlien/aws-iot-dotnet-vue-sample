@@ -26,4 +26,7 @@
     <Compile Remove="Models\EmptyClass.cs" />
     <Compile Remove="Models\AwsCognitoSettings.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\bootstrap\.bower.json" />
+  </ItemGroup>
 </Project>

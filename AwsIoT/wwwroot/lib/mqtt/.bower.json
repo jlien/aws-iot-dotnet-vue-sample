@@ -1,0 +1,14 @@
+{
+  "name": "mqtt",
+  "homepage": "https://github.com/mqttjs/MQTT.js",
+  "version": "2.18.8",
+  "_release": "2.18.8",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.18.8",
+    "commit": "d13814414161da8b4aa8a7ca5054807fde2d863c"
+  },
+  "_source": "https://github.com/mqttjs/MQTT.js.git",
+  "_target": "2.18.8",
+  "_originalSource": "mqtt"
+}

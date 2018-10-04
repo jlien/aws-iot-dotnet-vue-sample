@@ -1,6 +1,5 @@
 ﻿// Write your JavaScript code.
 
-
 var app = new Vue({
       el: '#iotApp',
       data: {
@@ -56,7 +55,7 @@ var app = new Vue({
                 dataType: 'json',
                 contentType: 'application/json',
                 success: function(data, other) {
-                    that.websocketConnectionUrl = data.url;
+                    that.configSocket(data.result);
                     $("#nameForm").hide();
                     $("#messageForm").show();
                 },
@@ -65,11 +64,13 @@ var app = new Vue({
                 }
             });
         },
-        configSocket: function() {
+        configSocket: function(websocketInfo) {
             var that = this;
 
             // Create a client instance
-            var client = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId");
+            // Hack the string
+            //var host = websocketInfo.url.replace("wss://", "");
+            var client = new Paho.MQTT.Client(websocketInfo.url, "clientId");
 
             // set callback handlers
             client.onConnectionLost = onConnectionLost;

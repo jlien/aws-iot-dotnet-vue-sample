@@ -10,7 +10,7 @@ namespace AwsIoT.Controllers
         [Route("/WebsocketProviderInfo")]
         public IActionResult Create([FromBody] SocketProviderRequestDTO dto)
         {
-            var result = new TopicAuthorizer(dto.userGuid).GenerateProfile();
+            var result = new TopicAuthorizer(dto.userGuid).GenerateProfileAsync();
             return Created(string.Empty, result);
         }
     }

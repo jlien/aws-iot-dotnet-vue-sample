@@ -30,7 +30,7 @@ namespace AwsIoT.Models
             var pubResources = PolicyList.Where(p => p.Publish)
                 .Select(p => $"{awsEndpoint}{TopicResource}{GenerateTopicString(p, userGuid)}").ToList();
 
-            return string.Format(
+            var json = string.Format(
                 IotConstants.IoTPolicyJsonTemplate,
                 AllowOrDeny(subResources),
                 GetResourceString(subResources),
@@ -39,6 +39,8 @@ namespace AwsIoT.Models
                 AllowOrDeny(pubResources),
                 GetResourceString(pubResources)
             );
+
+            return json;
         }
 
         public Dictionary<string, string> GetWebSocketTopics(string userGuid)
@@ -48,7 +50,13 @@ namespace AwsIoT.Models
 
         private string GenerateTopicString(Policy policy, string userGuid)
         {
-            return policy.IsUserSpecific ? $"{policy.Topic}/{userGuid}" : $"{policy.Topic}";
+            if (userGuid.Equals("John"))
+            {
+                return ChatTopic.JohnTopic;
+            }
+
+            return ChatTopic.PublicTopic;
+            //return policy.IsUserSpecific ? $"{policy.Topic}/{userGuid}" : $"{policy.Topic}";
         }
 
         private string AllowOrDeny(IEnumerable<string> actionResources)
@@ -81,7 +89,7 @@ namespace AwsIoT.Models
 
                 // Read all of the YAML into a string
                 var input = File.ReadAllText(
-                    Path.Combine("Shared", "WebSockets", "IotPolicies.yml"));
+                    Path.Combine("Shared", "IotPolicies.yml"));
 
                 // Map it to a List of Policy objects and save it
                 var deserializer = new Deserializer();

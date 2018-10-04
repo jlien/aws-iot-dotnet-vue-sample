@@ -21,7 +21,7 @@ namespace AwsIoT.Controllers
         [Route("Messages")]
         public IActionResult Publish([FromBody] PublishMessageDTO messageDTO)
         {
-            //Publisher().Publish(messageDTO);
+            Publisher().Publish(messageDTO);
             return Created(String.Empty, messageDTO);
         }
 

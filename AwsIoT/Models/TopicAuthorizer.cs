@@ -20,13 +20,13 @@ namespace AwsIoT.Models
     {
 
         string UserGuid;
-        string AwsIotEndpoint;
         WebsocketUserDTO WebsocketUserDTO;
 
         // Configs
         string IdentityProviderName => AwsIotSettings.IdentityProviderName;
         string CognitoIdentityPoolId => AwsIotSettings.IdentityPoolId;
         long TokenDuration => AwsIotSettings.TokenDuration;
+        string AwsIotEndpoint => AwsIotSettings.HostName;
 
         // Subscriber
         string IoTAWSAccessKey => AwsIotSettings.SubscriberAccessKey;
@@ -38,19 +38,24 @@ namespace AwsIoT.Models
             UserGuid = userGuid;
         }
 
-        public WebsocketConnectionInfoDTO GenerateProfile()
+        public async Task<WebsocketConnectionInfoDTO> GenerateProfileAsync()
         {
             // Create a Cognito User with the UserGuid
-            var cognitoUser = CreateCognitoUser(UserGuid);
+            WebsocketUserDTO = await CreateCognitoUser(UserGuid)
+                .ConfigureAwait(false);
 
             // Attach an IoT Policy to the User
-            var policy = AttachIotPolicy();
+            var policy = await AttachIotPolicy().ConfigureAwait(false);
 
             // Get Temporary Credentials for the User
-            var credentials = GetTemporaryCredentials(WebsocketUserDTO);
+            var credentials = await GetTemporaryCredentials(WebsocketUserDTO)
+                .ConfigureAwait(false);
+
+            var url = new WebsocketUrlBuilder()
+                .GetWebsocketUrl(credentials);
 
             return new WebsocketConnectionInfoDTO(
-                "PLACEHOLDER",
+                url,
                 TopicsForUser());
         }
 
@@ -158,7 +163,8 @@ namespace AwsIoT.Models
             {
                 var loginDictionary = new Dictionary<string, string>
                 {
-                    { IdentityProviderName, websocketUserDTO.CognitoIdentityToken }
+                    { AwsIotSettings.CognitoProviderName, websocketUserDTO.CognitoIdentityToken }
+                    //{ IdentityProviderName, websocketUserDTO.CognitoIdentityToken }
                 };
 
                 var getCredentialsForIdentityRequest =
@@ -187,7 +193,7 @@ namespace AwsIoT.Models
         {
             get
             {
-                //var region = RegionEndpoint.GetBySystemName(IoTAWSRegion);
+                // Make this dynamic
                 return new AmazonCognitoIdentityClient(AWSCredentials, Amazon.RegionEndpoint.USEast1);
             }
         }
@@ -200,8 +206,8 @@ namespace AwsIoT.Models
         {
             get
             {
-                var region = RegionEndpoint.GetBySystemName(IoTAWSRegion);
-                return new AmazonIoTClient(AWSCredentials, region);
+                // Make this Dynamic
+                return new AmazonIoTClient(AWSCredentials, Amazon.RegionEndpoint.USEast1);
             }
         }
     }
