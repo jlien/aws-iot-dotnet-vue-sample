@@ -10,7 +10,12 @@ using System.Threading.Tasks;
 
 namespace AwsIoT.Models
 {
-    public class WebsocketPublisher
+    public interface IWebsocketPublisher
+    {
+        void Publish(PublishMessageDTO publishMessageDTO);
+    }
+
+    public class WebsocketPublisher : IWebsocketPublisher
     {
         string PublisherAccessKey => AwsIotSettings.PublisherAccessKey;
         string PublisherSecretKey => AwsIotSettings.PublisherSecretKey;
@@ -74,6 +79,5 @@ namespace AwsIoT.Models
 
         BasicAWSCredentials AwsCredentials =>
             new BasicAWSCredentials(PublisherAccessKey, PublisherSecretKey);
-
     }
 }

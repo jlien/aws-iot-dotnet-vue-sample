@@ -10,13 +10,12 @@ using Amazon.Runtime;
 
 namespace AwsIoT.Models
 {
-    public interface ITopicAuthorizer
+    public interface IWebsocketAuthorizer
     {
-        bool IsAuthorized(string topic);
-        void GenerateProfile();
+        Task<WebsocketConnectionInfoDTO> GenerateProfileAsync();
     }
 
-    public class TopicAuthorizer
+    public class WebsocketAuthorizer : IWebsocketAuthorizer
     {
 
         string UserGuid;
@@ -33,7 +32,7 @@ namespace AwsIoT.Models
         string IoTAWSSecretKey => AwsIotSettings.SubscriberSecretKey;
         string IoTAWSRegion => AwsIotSettings.HostName;
 
-        public TopicAuthorizer(string userGuid)
+        public WebsocketAuthorizer(string userGuid)
         {
             UserGuid = userGuid;
         }
